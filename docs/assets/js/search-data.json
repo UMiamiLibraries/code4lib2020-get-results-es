@@ -7,10 +7,10 @@
     "relUrl": "/404.html"
   }
   ,"1": {
-    "title": "About",
-    "content": "This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at jekyllrb.com . You can find the source code for Minima at GitHub: jekyll / minima . You can find the source code for Jekyll at GitHub: jekyll / jekyll .",
-    "url": "http://localhost:4000/about/",
-    "relUrl": "/about/"
+    "title": "Docker Setup",
+    "content": "Docker and Docker-Composer setup . For this workshop, you will need to have Docker and Docker-Composer installed in your computer. Please follow the installation instructions from the Docker official documentation for the operating system you are running: . Docker for Mac | Docker for Windows 10 (Pro, Enterprise, or Education) | Docker for Ubuntu | .",
+    "url": "http://localhost:4000/docker-setup/",
+    "relUrl": "/docker-setup/"
   }
   ,"2": {
     "title": "",
