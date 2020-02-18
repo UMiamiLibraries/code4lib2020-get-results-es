@@ -13,4 +13,4 @@ Before running a Docker container, we need to increase the kernel memory on the 
 
 For hosts running Windows
 
-<img src="/assests/windows-host-image.JPG" alt="">
+<img src="{{ site.baseurl }}/assests/windows-host-image.JPG" alt="">
