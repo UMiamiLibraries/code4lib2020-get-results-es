@@ -2,6 +2,10 @@
 layout: page
 title: Docker Setup
 permalink: /docker-setup/
+nav_order: 1
+has_children: true
+has_toc: false
+
 ---
 
 ## Docker and Docker-Composer setup
@@ -20,3 +24,4 @@ Please follow the installation instructions from the Docker official documentati
     </li>
 </ul>
 
+[Next: Docker Setup - Host Kernel Memory ](/docker-setup-host-memory/){: .btn .btn-outline }
