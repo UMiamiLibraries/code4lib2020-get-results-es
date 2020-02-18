@@ -1,0 +1,28 @@
+{
+  
+  "0": {
+    "title": "",
+    "content": "404 . Page not found :( . The requested page could not be found. .",
+    "url": "https://umiamilibraries.github.io/code4lib2020-get-results-es/404.html",
+    "relUrl": "/404.html"
+  }
+  ,"1": {
+    "title": "Docker Setup - Host Kernel Memory",
+    "content": "Increase kernel memory in host computer . Before running a Docker container, we need to increase the kernel memory on the host computer. . For hosts running Windows . .",
+    "url": "https://umiamilibraries.github.io/code4lib2020-get-results-es/docker-setup-host-memory/",
+    "relUrl": "/docker-setup-host-memory/"
+  }
+  ,"2": {
+    "title": "Docker Setup",
+    "content": "Docker and Docker-Composer setup . For this workshop, you will need to have Docker and Docker-Composer installed in your computer. Please follow the installation instructions from the Docker official documentation for the operating system you are running: . Docker for Mac | Docker for Windows 10 (Pro, Enterprise, or Education) | Docker for Ubuntu | . Next: Docker Setup - Host Kernel Memory .",
+    "url": "https://umiamilibraries.github.io/code4lib2020-get-results-es/docker-setup/",
+    "relUrl": "/docker-setup/"
+  }
+  ,"3": {
+    "title": "Welcome!",
+    "content": "",
+    "url": "https://umiamilibraries.github.io/code4lib2020-get-results-es/",
+    "relUrl": "/"
+  }
+  
+}
