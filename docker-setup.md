@@ -24,4 +24,4 @@ Please follow the installation instructions from the Docker official documentati
     </li>
 </ul>
 
-[Next: Docker Setup - Host Kernel Memory ](/docker-setup-host-memory/){: .btn .btn-outline }
+[Next: Docker Setup - Host Kernel Memory ]({{ site.baseurl }}/docker-setup-host-memory/){: .btn .btn-outline }
