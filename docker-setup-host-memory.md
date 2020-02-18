@@ -2,8 +2,11 @@
 layout: page
 title: Docker Setup - Host Kernel Memory
 permalink: /docker-setup-host-memory/
-nav_order: 3
+nav_order: 2
 parent: Docker Setup
+has_children: true
+has_toc: false
+
 
 ---
 
@@ -13,4 +16,4 @@ Before running a Docker container, we need to increase the kernel memory on the 
 
 For hosts running Windows
 
-<img src="{{ site.baseurl }}/assests/windows-host-image.JPG" alt="">
+<img src="{{ site.baseurl }}/assets/windows-host-image.JPG" alt="">

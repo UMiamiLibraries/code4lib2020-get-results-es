@@ -6,7 +6,7 @@ has_children: true
 has_toc: true
 title: Welcome!
 has_children: true
-
+permalink: /index.html
 layout: home
 ---
 
