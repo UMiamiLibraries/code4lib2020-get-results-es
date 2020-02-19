@@ -1,8 +1,8 @@
 ---
 layout: page
-title: Docker Setup
-permalink: /docker-setup/
-nav_order: 1
+title: Creating the Dockerfile
+permalink: /creating-docker-file/
+nav_order: 2
 ---
 
 ## Docker and Docker-Composer setup
@@ -104,5 +104,4 @@ sudo sysctl -w vm.max_map_count=4096000
 
 Congratulations! Now you should have installed Docker and Docker-compose installed in your computer. In the next section, we will go through the steps for creating a Dockerfile that will be used to create a Docker container to host our Symfony application.
 
-[Previous: Welcome!]({{ site.baseurl }}/index.html){: .btn .btn-outline }
-[Next: Creating the Dockerfile]({{ site.baseurl }}/creating-docker-file/){: .btn .btn-outline }
+[Next: Creating the Dockerfile]({{ site.baseurl }}/docker-setup/){: .btn .btn-outline }
