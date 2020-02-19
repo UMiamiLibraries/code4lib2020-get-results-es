@@ -2165,3 +2165,4 @@ pre.highlight code, figure.highlight code { padding: 0; border: 0; }
   .pl-xl-10 { padding-left: 4rem !important; }
   .px-xl-10 { padding-right: 4rem !important; padding-left: 4rem !important; }
   .py-xl-10 { padding-top: 4rem !important; padding-bottom: 4rem !important; } }
+.workshop-figure-caption { font-size: 14px !important; }
