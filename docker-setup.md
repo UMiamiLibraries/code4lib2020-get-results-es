@@ -102,7 +102,7 @@ sudo sysctl -w vm.max_map_count=4096000
 
 <hr>
 
-Congratulations! Now you should have installed Docker and Docker-compose installed in your computer. In the next section, we will go through the steps for creating a Dockerfile that will be used to create a Docker container to host our Symfony application.
+Congratulations! Now you should have installed Docker and Docker-compose installed in your computer. In the next sections, we will go through the steps for creating a Dockerfile that will be used to create a Docker container to host our Symfony application.
 
 [Previous: Welcome!]({{ site.baseurl }}/index.html){: .btn .btn-outline }
-[Next: Creating the Dockerfile]({{ site.baseurl }}/creating-docker-file/){: .btn .btn-outline }
+[Next: Project Setup]({{ site.baseurl }}/project-setup/){: .btn .btn-outline }
