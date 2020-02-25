@@ -1,9 +1,28 @@
 ---
 layout: page
-title: Docker Setup
-permalink: /docker-setup/
+title: Computer Setup
+permalink: /computer-setup/
 nav_order: 1
 ---
+
+## Git
+
+<p>Please verify you have Git installed in your computer by running the following command in a console.</p>
+
+{% highlight console %}
+$ git --version
+{% endhighlight %}
+
+<p>You should get an output like the one below depending on your operating system.</p>
+
+{% highlight console %}
+git version 2.25.0.windows.1
+{% endhighlight %}
+
+<p>If you don't have Git installed, please refer to the following documentation to install it in your computer:
+<a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">https://git-scm.com/book/en/v2/Getting-Started-Installing-Git</a>
+</p>
+
 
 ## Docker and Docker-Composer setup
 In this workshop, you will need to have Docker and Docker-Composer installed in your computer. 
