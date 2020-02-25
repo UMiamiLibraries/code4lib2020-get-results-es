@@ -28,5 +28,4 @@ echo "Checking Elasticsearch node 2 is ready"
 
 </span><span class="gp">#</span><span class="w"> </span>start apache
 <span class="go">sed -i "s/{PORT}/80/g" /etc/apache2/apache2.conf
-
 /usr/sbin/apache2ctl -D FOREGROUND</span></code></pre></figure> </p> <p>This code will wait for the Elasticsearch containers (we will create these in later sections) to be ready and then starts up the Apache server listening on port 80 too.</p> <p><a href="/code4lib2020-get-results-es/project-setup" class="btn btn-outline">Previous: Project Setup</a> <a href="/code4lib2020-get-results-es/creating-dockerfile/" class="btn btn-outline">Next: TBD</a></p> </div> </div> </div> </div> </body> </html>
