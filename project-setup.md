@@ -27,6 +27,8 @@ $ git clone https://github.com/UMiamiLibraries/get-results-es-boilerplate.git
 |   |   |-- composer.json (composer file with the required dependencies for the ingester app)
 |   |-- search-app
 |   |   |-- composer.json (composer file with the required dependencies for the search app)
+|   |-- wait-for-it (We will get back to this directory in future sections of the workshop)
+
 +-- ..
 {% endhighlight %} 
 
