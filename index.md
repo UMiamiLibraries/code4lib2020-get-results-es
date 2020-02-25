@@ -8,4 +8,4 @@ layout: home
 ---
 
 
-[Next: Docker Setup]({{ site.baseurl }}/docker-setup/){: .btn .btn-outline }
+[Next: Computer Setup]({{ site.baseurl }}/computer-setup/){: .btn .btn-outline }
