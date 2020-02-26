@@ -15,17 +15,64 @@
 
 <span class="k">EXPOSE</span><span class="s"> 80</span></code></pre></figure> </p> <p>Our container will be listening to request on port 80</p> <h3 id="adding-an-entrypoint-to-the-dockerfile"> <a href="#adding-an-entrypoint-to-the-dockerfile" class="anchor-heading"><svg viewBox="0 0 16 16" aria-hidden="true"><use xlink:href="#link"></use></svg></a> Adding an ENTRYPOINT to the Dockerfile </h3> <p> An ENTRYPOINT will let us specify which commands we want to execute when the container is started. Let's, for now, add the following code to our Dockerfile </p> <p> <figure class="highlight"><pre><code class="language-docker" data-lang="docker"><span class="c">#.docker/Dockerfile</span>
 
-<span class="k">COPY</span><span class="s"> ./init.sh /usr/local/bin/init.sh</span>
+<span class="k">COPY</span><span class="s"> ./.docker/init.sh /usr/local/bin/init.sh</span>
 <span class="k">RUN </span><span class="nb">chmod </span>u+x /usr/local/bin/init.sh
 
-<span class="k">ENTRYPOINT</span><span class="s"> ["/usr/local/bin/init.sh"]</span></code></pre></figure> </p> <p> But wait, the init.sh file does not exist. Let's create an init.sh file in the .docker directory and add the following code to it: </p> <p> <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="gp">#</span><span class="o">!</span>/usr/bin/env bash
-<span class="go">
-echo "Checking Elasticsearch node 1 is ready"
-/usr/local/wait-for-it.sh umle1data-0.local:9200 -s --timeout=60 -- echo "Elasticsearch node 1 is ready!"
+<span class="k">ENTRYPOINT</span><span class="s"> ["/usr/local/bin/init.sh"]</span></code></pre></figure> </p> <p> The previous code will copy the init.sh file into the Docker container and define an ENTRYPOINT using the init.sh But wait, the init.sh file does not exist. Let's create an init.sh file in the .docker directory and add the following code to it: </p> <p> <figure class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="c">#!/usr/bin/env bash</span>
 
-echo "Checking Elasticsearch node 2 is ready"
-/usr/local/wait-for-it.sh umle1data-1.local:9200 -s --timeout=60 -- echo "Elasticsearch node 2 is ready!"
+<span class="nb">echo</span> <span class="s2">"Checking Elasticsearch node 1 is ready"</span>
+/usr/local/wait-for-it.sh esnode-1.local:9200 <span class="nt">-s</span> <span class="nt">--timeout</span><span class="o">=</span>120 <span class="nt">--</span> <span class="nb">echo</span> <span class="s2">"Node 1 is ready!"</span>
 
-</span><span class="gp">#</span><span class="w"> </span>start apache
-<span class="go">sed -i "s/{PORT}/80/g" /etc/apache2/apache2.conf
-/usr/sbin/apache2ctl -D FOREGROUND</span></code></pre></figure> </p> <p>This code will wait for the Elasticsearch containers (we will create these in later sections) to be ready and then starts up the Apache server listening on port 80 too.</p> <p><a href="/code4lib2020-get-results-es/project-setup" class="btn btn-outline">Previous: Project Setup</a> <a href="/code4lib2020-get-results-es/creating-dockerfile/" class="btn btn-outline">Next: TBD</a></p> </div> </div> </div> </div> </body> </html>
+<span class="nb">echo</span> <span class="s2">"Checking Elasticsearch node 2 is ready"</span>
+/usr/local/wait-for-it.sh esnode2-1.local:9200 <span class="nt">-s</span> <span class="nt">--timeout</span><span class="o">=</span>120 <span class="nt">--</span> <span class="nb">echo</span> <span class="s2">"Node 2 is ready!"</span>
+
+<span class="c"># start apache</span>
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s2">"s/{PORT}/80/g"</span> /etc/apache2/apache2.conf
+/usr/sbin/apache2ctl <span class="nt">-D</span> FOREGROUND</code></pre></figure> </p> <p>This code will wait 2 minutes for the Elasticsearch containers (we will create these in a later section) to be ready and then starts up the Apache server listening on port 80.</p> <p>The Dockerfile should look like this at this point:</p> <p> <figure class="highlight"><pre><code class="language-docker" data-lang="docker"><span class="k">FROM</span><span class="s"> appsvc/php:7.2-apache_20191031.7</span>
+
+<span class="k">RUN </span>curl <span class="nt">-sS</span> https://getcomposer.org/installer | php
+<span class="k">RUN </span><span class="nb">mv </span>composer.phar /usr/local/bin/composer <span class="o">&amp;&amp;</span> <span class="se">\
+</span>        <span class="nb">chmod</span> +x /usr/local/bin/composer <span class="o">&amp;&amp;</span> <span class="se">\
+</span>        composer <span class="nt">--version</span>
+
+<span class="c">#Remove php opcache file -- only for development</span>
+<span class="k">RUN </span><span class="nb">rm</span> <span class="nt">-rf</span> /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+<span class="k">COPY</span><span class="s"> ./.docker/init.sh /usr/local/bin/init.sh</span>
+<span class="k">RUN </span><span class="nb">chmod </span>u+x /usr/local/bin/init.sh
+
+<span class="k">ENTRYPOINT</span><span class="s"> ["/usr/local/bin/init.sh"]</span></code></pre></figure> </p> <p>Time to build the container. Run the following code from the project root folder in a console:</p> <p> <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="gp">$</span><span class="w"> </span>docker build <span class="nt">-f</span> .docker/Dockerfile .</code></pre></figure> </p> <p>The previous command tells Docker to build a container using the Dockerfile defined in the -f parameter. I f you don't specify a filepath, Docker will search for a Dockefile within the same directory the build command is executed from. The dot at the end of the command specified the location where we want to build the container. In this case, we are building the container in the current directory</p> <p>The output from the previous docker build command should look similar to this: </p> <p> <figure class="highlight"><pre><code class="language-console" data-lang="console"><span class="go">Sending build context to Docker daemon  286.2kB
+Step 1/7 : FROM appsvc/php:7.2-apache_20191031.7
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>692faef99277
+<span class="go">Step 2/7 : RUN curl -sS https://getcomposer.org/installer | php
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>Running <span class="k">in </span>59de52d7babe
+<span class="go">Cannot load Zend OPcache - it was already loaded
+All settings correct for using Composer
+Downloading...
+
+Composer (version 1.9.3) successfully installed to: /home/site/wwwroot/composer.phar
+Use it: php composer.phar
+
+Removing intermediate container 59de52d7babe
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>11c9d3ca3665
+<span class="go">Step 3/7 : RUN mv composer.phar /usr/local/bin/composer &amp;&amp; chmod +x /usr/local/bin/composer &amp;&amp; composer --version
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>Running <span class="k">in </span>ea691c6d9ec2
+<span class="go">Cannot load Zend OPcache - it was already loaded
+Composer version 1.9.3 2020-02-04 12:58:49
+Removing intermediate container ea691c6d9ec2
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>220bcb9bfeb3
+<span class="go">Step 4/7 : RUN rm -rf /usr/local/etc/php/conf.d/opcache-recommended.ini
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>Running <span class="k">in </span>5b0c82733c56
+<span class="go">Removing intermediate container 5b0c82733c56
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>8bb2be6b4690
+<span class="go">Step 5/7 : COPY ./.docker/init.sh /usr/local/bin/init.sh
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>51ac59253e84
+<span class="go">Step 6/7 : RUN chmod u+x /usr/local/bin/init.sh
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>Running <span class="k">in </span>78fd768bc949
+<span class="go">Removing intermediate container 78fd768bc949
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>f0db0655f565
+<span class="go">Step 7/7 : ENTRYPOINT ["/usr/local/bin/init.sh"]
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>Running <span class="k">in </span>5d6b187e36c2
+<span class="go">Removing intermediate container 5d6b187e36c2
+</span><span class="gp"> ---&gt;</span><span class="w"> </span>67a994a34f76
+<span class="go">Successfully built 67a994a34f76</span></code></pre></figure> </p> <p> So far we have written a Dockerfile to build a Docker container with PHP, Apache, php-composer and a custom ENTRYPOINT. In the next sections, we will create a docker-compose file to configure other containers that we need for our search application. </p> <hr /> <p><a href="/code4lib2020-get-results-es/project-setup" class="btn btn-outline">Previous: Project Setup</a> <a href="/code4lib2020-get-results-es/creating-dockerfile/" class="btn btn-outline">Next: TBD</a></p> </div> </div> </div> </div> </body> </html>
