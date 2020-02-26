@@ -7,7 +7,7 @@ nav_order: 1
 
 ## Git
 
-<p>Please verify you have Git installed in your computer by running the following command in a console.</p>
+<p>Please verify you have Git installed on your computer by running the following command in a console.</p>
 
 {% highlight console %}
 $ git --version
@@ -19,13 +19,13 @@ $ git --version
 git version 2.25.0.windows.1
 {% endhighlight %}
 
-<p>If you don't have Git installed, please refer to the following documentation to install it in your computer:
+<p>If you don't have Git installed, please refer to the following documentation to install it on your computer:
 <a href="https://git-scm.com/book/en/v2/Getting-Started-Installing-Git" target="_blank">https://git-scm.com/book/en/v2/Getting-Started-Installing-Git</a>
 </p>
 
 
 ## Docker and Docker-Composer setup
-In this workshop, you will need to have Docker and Docker-Composer installed in your computer. 
+In this workshop, you will need to have Docker and Docker-Composer installed on your computer. 
 Please follow the below installation instructions from the Docker official documentation, for the operating system you are running.
 
 <ul>
@@ -121,7 +121,7 @@ sudo sysctl -w vm.max_map_count=4096000
 
 <hr>
 
-Congratulations! Now you should have Docker and Docker-compose installed in your computer. In the next sections, we will go through the steps for creating a Dockerfile.
+Congratulations! Now you should have Docker and Docker-compose installed on your computer. In the next sections, we will go through the steps for creating a Dockerfile.
 
 [Previous: Welcome!]({{ site.baseurl }}/index.html){: .btn .btn-outline }
 [Next: Project Setup]({{ site.baseurl }}/project-setup/){: .btn .btn-outline }

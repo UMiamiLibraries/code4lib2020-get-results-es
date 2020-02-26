@@ -92,7 +92,7 @@ EXPOSE 80
 {% endhighlight %} 
 </p>
 
-<p>Our container will be listening to request on port 80</p>
+<p>Our container will be listening to requests on port 80</p>
 
 ### Adding an ENTRYPOINT to the Dockerfile
 
@@ -217,7 +217,7 @@ Successfully built 67a994a34f76
 </p>
 
 <p>
-So far we have written a Dockerfile to build a Docker container with PHP, Apache, 
+So far we have written a Dockerfile to build a Docker container running PHP, Apache, 
 php-composer and a custom ENTRYPOINT. 
 In the next sections, we will create a docker-compose file to configure other containers that we need for our search application.
 </p>
@@ -225,4 +225,4 @@ In the next sections, we will create a docker-compose file to configure other co
 <hr>
 
 [Previous: Project Setup]({{ site.baseurl }}/project-setup){: .btn .btn-outline }
-[Next: TBD]({{ site.baseurl }}/creating-dockerfile/){: .btn .btn-outline }
+[Next: The docker-compose file]({{ site.baseurl }}/docker-compose-file/){: .btn .btn-outline }
