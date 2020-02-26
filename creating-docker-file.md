@@ -7,7 +7,7 @@ nav_order: 3
 
 ## Creating the Dockerfile
 
-<p>A Dockerfile contains all the commands needed to build a specific image. Think off a Dockerfile as a recipe 
+<p>A Dockerfile contains all the commands needed to build a specific image. Think of a Dockerfile as a recipe 
 to build an image.</p>
 
 <p>Docker images are formed by multiple read-only layers that are representations of the instructions contained 
@@ -171,7 +171,7 @@ $ docker build -f .docker/Dockerfile .
 
 <p>The previous command tells Docker to build a container using the Dockerfile defined in the -f parameter. I
 f you don't specify a filepath, Docker will search for a Dockefile within the same directory the build command is executed from.
-The dot at the end of the command specified the location where we want to build the container. In this case, we are building
+The dot at the end of the command specifies the location where we want to build the container. In this case, we are building
 the container in the current directory</p>
 
 <p>The output from the previous docker build command should look similar to this: </p>
