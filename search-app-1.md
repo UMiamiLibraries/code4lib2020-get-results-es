@@ -1,11 +1,11 @@
 ---
 layout: page
-title: The docker-compose file
-permalink: /docker-compose-file/
-nav_order: 4
+title: The search app
+permalink: /search-app-1/
+nav_order: 5
 ---
 
-## The docker-compose file
+## The search app
 
 <p>
 We are now ready to create our docker-compose file. Our development environment will consist of two PHP applications and 
@@ -164,80 +164,9 @@ $ docker-compose up
 </figure>
 </p>
 
-<p>Your docker-compose file should look like these now: </p>
-
-<p>
-{% highlight YAML %}
-#docker-compose.yml
-
-version: '3.6'
-
-services:
-  esdata-0.local: # First Elasticsearch node
-    container_name: esdata-0.local
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0 # Official Elasticsearch image
-    environment: # Specific container environment variables
-      - node.name=esdata-0.local # Name of the Elasticsearch node
-      - cluster.name=es-local-cluster # Name of the Elasticsearch cluster
-      - discovery.seed_hosts=esdata-1.local #List of other nodes in the cluster that are likely to be live and contactable
-      - cluster.initial_master_nodes=esdata-0.local # List of other nodes in the cluster that are master eligible
-      - bootstrap.memory_lock=true # Prevents any Elasticsearch object in memory from being swapped out to the hard drive
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m" # Sets JVM heap size in the container
-    volumes: # Attach local data directory
-      - esdata-0.local.data:/usr/share/elasticsearch/data # Docker volume to persist the node data across restarts
-    ports:
-      - 9200:9200 # Exposing port 9200 of the container
-    ulimits:
-      memlock: # Sets an unlimited amount of memory to be locked by the service (container)
-        soft: -1
-        hard: -1
-
-  esdata-1.local: # Second Elasticsearch node
-    container_name: esdata-1.local
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.0
-    environment:
-      - node.name=esdata-1.local
-      - cluster.name=es-local-cluster
-      - discovery.seed_hosts=esdata-0.local
-      - cluster.initial_master_nodes=esdata-0.local
-      - bootstrap.memory_lock=true
-      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-    volumes:
-      - esdata-1.local.data:/usr/share/elasticsearch/data
-    ulimits:
-      memlock:
-        soft: -1
-        hard: -1
-
-  search-app: # Search App service
-    container_name: search-app
-    build:
-      context: ./
-      dockerfile: ./.docker/Dockerfile
-    environment: # Specific container environment variables
-      - APACHE_PORT=80 # Set Apache to listen on port 80
-      - APACHE_DOCUMENT_ROOT=/home/site/wwwroot/public #Set the directory from which Apache will serve files
-    volumes: # Attach local data directory
-      - ./search-app:/home/site/wwwroot
-    depends_on:
-      - esdata-0.local
-      - esdata-1.local
-    ports:
-      - 8080:80
-
-volumes: # Defines volumes used by the services
-  esdata-0.local.data:
-    driver: local
-  esdata-1.local.data:
-    driver: local
-
-{% endhighlight %} 
-</p>
-
 <p>We now have in place all the infrastructure for our search app. Let's create the search app!</p>
-
 
 <hr>
 
-[Previous: Creating the Dockerfile]({{ site.baseurl }}/creating-dockerfile){: .btn .btn-outline }
-[Next: The search app]({{ site.baseurl }}/search-app-1/){: .btn .btn-outline }
+[Previous: The docker-compose file]({{ site.baseurl }}/docker-compose-file){: .btn .btn-outline }
+[Next: TBD]({{ site.baseurl }}/creating-dockerfile/){: .btn .btn-outline }
