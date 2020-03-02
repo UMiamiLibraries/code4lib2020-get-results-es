@@ -27,12 +27,13 @@ FROM appsvc/php:7.3-apache_20200101.1
 <p>We are instructing Docker to start FROM the pre-existing PHP and Apache image built by Microsoft, appsvc/php:7.3-apache_20200101.1. 
 This pre-existing image is running a Linux distribution and php version 7.3 and apache, and it was created on January 1st, 2020.</p>
 
-<p>Now, let's install composer. Add the following code to the Dockerfile.</p>
+<p>Now, let's install php composer. Add the following code to the Dockerfile.</p>
 
 <p>
 {% highlight Docker %}
 #.docker/Dockerfile
 
+# Installing php composer
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer && \
         chmod +x /usr/local/bin/composer && \
@@ -79,21 +80,6 @@ RUN chmod u+x /usr/local/wait-for-it.sh
 {% endhighlight %} 
 </p>
 
-<p>
-We also need to tell Docker that the container is going to be listening on a specific port at runtime. Please add the following code to the Dockerfile:
-</p>
-
-<p>
-{% highlight Docker %}
-#.docker/Dockerfile
-
-EXPOSE 80
-
-{% endhighlight %} 
-</p>
-
-<p>Our container will be listening to requests on port 80</p>
-
 ### Adding an ENTRYPOINT to the Dockerfile
 
 <p>
@@ -122,13 +108,12 @@ But wait, the init.sh file does not exist. Let's create an init.sh file in the .
 #!/usr/bin/env bash
 
 echo "Checking Elasticsearch node 1 is ready"
-/usr/local/wait-for-it.sh esnode-1.local:9200 -s --timeout=120 -- echo "Node 1 is ready!"
+/usr/local/wait-for-it.sh esdata-0.local:9200 -s --timeout=120 -- echo "Node 1 is ready!"
 
 echo "Checking Elasticsearch node 2 is ready"
-/usr/local/wait-for-it.sh esnode2-1.local:9200 -s --timeout=120 -- echo "Node 2 is ready!"
+/usr/local/wait-for-it.sh esdata-1.local:9200 -s --timeout=120 -- echo "Node 2 is ready!"
 
 # start apache
-sed -i "s/{PORT}/80/g" /etc/apache2/apache2.conf
 /usr/sbin/apache2ctl -D FOREGROUND
 
 {% endhighlight %} 
@@ -141,8 +126,9 @@ sed -i "s/{PORT}/80/g" /etc/apache2/apache2.conf
 <p>
 {% highlight docker %}
 
-FROM appsvc/php:7.2-apache_20191031.7
+FROM appsvc/php:7.3-apache_20200101.1
 
+# Installing php composer
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer && \
         chmod +x /usr/local/bin/composer && \
@@ -151,10 +137,14 @@ RUN mv composer.phar /usr/local/bin/composer && \
 #Remove php opcache file -- only for development
 RUN rm -rf /usr/local/etc/php/conf.d/opcache-recommended.ini
 
+COPY ./.docker/wait-for-it/wait-for-it.sh /usr/local/wait-for-it.sh
+RUN chmod u+x /usr/local/wait-for-it.sh
+
 COPY ./.docker/init.sh /usr/local/bin/init.sh
 RUN chmod u+x /usr/local/bin/init.sh
 
 ENTRYPOINT ["/usr/local/bin/init.sh"]
+
 
 {% endhighlight %} 
 </p>
