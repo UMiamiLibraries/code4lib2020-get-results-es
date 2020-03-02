@@ -16,6 +16,18 @@ $ git clone https://github.com/UMiamiLibraries/get-results-es-boilerplate.git
 {% endhighlight %} 
 </p>
 
+<p>
+{% highlight console %}
+$ git submodule init
+{% endhighlight %} 
+</p>
+
+<p>
+{% highlight console %}
+$ git submodule update
+{% endhighlight %} 
+</p>
+
 <p>The boilerplate structure should look like this:</p>
 
 {% highlight Docker %}
