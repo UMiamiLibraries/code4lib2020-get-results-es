@@ -113,13 +113,18 @@ echo "Checking Elasticsearch node 1 is ready"
 echo "Checking Elasticsearch node 2 is ready"
 /usr/local/wait-for-it.sh esdata-1.local:9200 -s --timeout=120 -- echo "Node 2 is ready!"
 
+# Install search app dependencies
+echo "Installing search app dependencies"
+cd /home/site/wwwroot
+composer install
+
 # start apache
 /usr/sbin/apache2ctl -D FOREGROUND
 
 {% endhighlight %} 
 </p>
 
-<p>This code will wait 2 minutes for the Elasticsearch containers (we will create these in a later section) to be ready and then starts up the Apache server listening on port 80.</p>
+<p>This code will wait 2 minutes for the Elasticsearch containers (we will create these in a later section) to be ready. It will also install the search app dependencies defined in the composer.json file, and then starts up the Apache server.</p>
 
 <p>The Dockerfile should look like this at this point:</p>
 

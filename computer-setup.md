@@ -116,7 +116,7 @@ For this workshop, we need to increase the amount of memory that Docker can use 
 
 1. Open a terminal and run the following command:
 {% highlight console %}
-sudo sysctl -w vm.max_map_count=4096000
+sudo sysctl -w vm.max_map_count=262144
 {% endhighlight %}
 
 <hr>

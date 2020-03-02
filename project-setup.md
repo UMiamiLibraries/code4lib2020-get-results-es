@@ -21,12 +21,9 @@ $ git clone https://github.com/UMiamiLibraries/get-results-es-boilerplate.git
 {% highlight Docker %}
 +-- ..
 |-- get-results-es-boilerplate
-|   |-- .docker (This directory will contain all our Docker related files)
+|   |-- .docker (This directory will contain our Docker related files)
 |   |   |-- wait-for-it (We will get back to this directory in future sections of the workshop)
-|   |-- ingester-app (Here we will create our ingester app)
-|   |   |-- composer.json (composer file with the required dependencies for the ingester app)
-|   |-- search-app
-|   |   |-- composer.json (composer file with the required dependencies for the search app)
+|   |-- search-app (This directoy contains the files for our search app)
 |   |-- docker-compose.yml (We will configure our application's services in this file)
 
 +-- ..
