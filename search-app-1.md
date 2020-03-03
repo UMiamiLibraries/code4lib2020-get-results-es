@@ -24,7 +24,178 @@ we can the collection in JSON format by appending ?fo=json to the URL of the col
 target="_blank">https://www.loc.gov/collections/national-screening-room/?fo=json</a> in your browser you will get the
  JSON of this collection.</p>
 
-### A custom script to ingest the collection into our Elasticsearch cluster
+### A custom script to ingest the collection's data into the Elasticsearch cluster
+
+<p>The search-app directory contains the Symfony app that will query our Elasticsearch cluster. But first, we need a way to ingest data
+from the Library of Congress' collection into our cluster. Let's create it!</p>
+
+<p>Navigate to /search-app/src/CustomScripts. This directory contains two files: ingest.php and ElasticsearchIngester.php. 
+The first one will be the entry point for our script. The later is a class that will contain all the logic required for the ingestion process</p>
+
+<p>Let's check the ElasticsearchIngester class first.</p>
+
+<p>There is a couple of things happening in the class constructor: </p>
+
+<p>
+{% highlight php %}
+# search-app/src/CustomScripts/ElasticsearchIngester.php
+...
+class ElasticsearchIngester
+{
+    private $apiUrl;
+    private $elasticSearchClient;
+    private $indexName;
+    
+    public function __construct($apiUrl, $indexName)
+    {
+        $this->apiUrl = $apiUrl;
+        $this->indexName = $indexName;
+        $elastic_host_info = [
+            $_ENV['ELASTIC_HOST'],
+            $_ENV['ELASTIC_PORT'],
+            $_ENV['ELASTIC_USER'],
+            $_ENV['ELASTIC_PASSWORD']
+        ];
+        $this->elasticSearchClient = ClientBuilder::create()->setHosts($elastic_host_info)->build();
+    }
+....
+}
+{% endhighlight %} 
+</p>
+
+<p>In the class constructor we are assigning values for the apiUrl and indexName variables. We are also building an 
+Elasticsearch client using the official PHP client for Elasticsearch. We are reading some of the Elasticsearch settings 
+from the .env file</p>
+
+<p>
+{% highlight php %}
+# search-app/.env
+ELASTIC_HOST=esdata-0.local
+ELASTIC_PORT=9200
+ELASTIC_USER=elastic
+ELASTIC_PASSWORD=changeme
+
+{% endhighlight %} 
+</p>
+
+<p>The ELASTIC_HOST value corresponds to the Elastisearch master node we defined in the docker-compose file. All the interactions
+made by the PHP client for Elasticsearch will be done using port 9200. The ELASTIC_USER and ELASTIC_PASSWORD values are 
+the default values. IMPORTANT: These values should be changed when using Elasticsearch in a production environment</p>
+
+<p>There are also a couple of functions in the class that are responsible for getting the JSON data from the Library of Congress API, 
+ check if a specific index in Elasticseach exists and create an index in Elasticsearch.</p>
+
+<p>
+{% highlight php %}
+# search-app/src/CustomScripts/ElasticsearchIngester.php
+...
+private function getJsonData($url)
+{
+    sleep(1); //We are waiting a second between each API call to prevent being temporarily banned 
+              // by the Library of Congress API
+    $json = file_get_contents($url);
+    return json_decode($json);
+}
+public function indexExists()
+{
+    $indexParams['index'] = $this->indexName;
+    return $this->elasticSearchClient->indices()->exists($indexParams);
+}
+public function createIndex()
+{
+    $params = [
+        'index' => $this->indexName
+    ];
+    $this->elasticSearchClient->indices()->create($params);
+}
+...
+{% endhighlight %} 
+</p>
+
+<p>The ingestData() function deals with ingesting the data into the Elasticsearch cluster. The function goes through all
+the items in the collection and gets the id, title, location, online_format, url, notes, image_url and description of each one.</p>
+
+<p>
+{% highlight php %}
+# search-app/src/CustomScripts/ElasticsearchIngester.php
+...
+public function ingestData()
+{
+    $progressBar = new ProgressBar(new ConsoleOutput(), 100);
+    echo 'Ingesting data' . PHP_EOL;
+    $currentApiUrl = $this->apiUrl;
+    do {
+        $data = $this->getJsonData($currentApiUrl);
+        if ($data) {
+            $results = $data->results;
+            $pagination = $data->pagination;
+            $params = $this->prepareValues($results);
+            $this->elasticSearchClient->bulk($params);
+            $progressBar->advance(4);
+            $currentApiUrl = !empty($pagination->next) ? $pagination->next : null;
+        }
+    } while (!empty($currentApiUrl));
+    $progressBar->finish();
+    echo PHP_EOL . 'Done ingesting data' . PHP_EOL;
+}
+
+private function prepareValues($results)
+{
+    $params = ['body' => []];
+    foreach ($results as $result) {
+        $params['body'][] = [
+            'index' => [
+                '_index' => $this->indexName,
+                '_id' => $result->id
+            ]
+        ];
+        $params['body'][] = [
+            'title' => $result->title,
+            'online_format' => $result->online_format,
+            'location' => $result->location,
+            'url' => $result->url,
+            'notes' => $result->item->notes,
+            'image_url' => $result->image_url,
+            'description' => $result->description
+        ];
+    }
+    return $params;
+}
+...
+{% endhighlight %} 
+</p>
+
+<p>The ingest.php file creates an instance of our ElasticsearchIngester class. Then creates an index if it does not exist
+and after, it ingests the collection's data into the Elasticsearch cluster</p>
+
+<p>
+{% highlight php %}
+# search-app/src/CustomScripts/ingest.php
+...
+$apiUrl = 'https://www.loc.gov/collections/national-screening-room/?fo=json';
+
+$elasticSearchIngester = new ElasticsearchIngester($apiUrl, 'screening-room-index');
+
+if (!$elasticSearchIngester->indexExists()) {
+    $elasticSearchIngester->createIndex();
+}
+
+$elasticSearchIngester->ingestData();
+{% endhighlight %} 
+</p>
+
+<p>Now that we are familiar with the custom script to ingest the collection's data into the Elasticsearch cluster, let's run it!</p>
+
+### Running the script to the ingest the collection's data into the Elasticsearch cluster
+
+<p>We have to run the script from within the search-app Docker container. We are going to ssh into the container. Before
+executing the following code from a console, please be sure that docker-compose is running.</p>
+
+<p>
+{% highlight Docker %}
+docker exec -it search-app /bin/bash
+{% endhighlight %} 
+</p>
 
 <hr>
 

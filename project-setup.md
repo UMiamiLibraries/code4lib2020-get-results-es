@@ -34,6 +34,7 @@ $ git submodule update
 
 <p>At this point, the boilerplate structure should look like this:</p>
 
+<p>
 {% highlight Docker %}
 +-- ..
 |-- get-results-es-boilerplate
@@ -44,6 +45,7 @@ $ git submodule update
 
 +-- ..
 {% endhighlight %} 
+</p>
 
 <hr>
 
