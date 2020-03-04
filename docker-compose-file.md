@@ -240,4 +240,4 @@ volumes: # Defines volumes used by the services
 <hr>
 
 [Previous: Creating the Dockerfile]({{ site.baseurl }}/creating-dockerfile){: .btn .btn-outline }
-[Next: The search app]({{ site.baseurl }}/search-app-1/){: .btn .btn-outline }
+[Next: The search app (part 1)]({{ site.baseurl }}/search-app-1/){: .btn .btn-outline }
