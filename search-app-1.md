@@ -48,8 +48,6 @@ class ElasticsearchIngesterCommand extends Command
     
     public function __construct()
     {
-        $dotenv = new Dotenv();
-        $dotenv->load(__DIR__ . '/../../.env');
         $elastic_host_info = [
             $_ENV['ELASTIC_HOST'],
             $_ENV['ELASTIC_PORT'],
@@ -57,9 +55,7 @@ class ElasticsearchIngesterCommand extends Command
             $_ENV['ELASTIC_PASSWORD']
         ];
         $this->elasticSearchClient = ClientBuilder::create()->setHosts($elastic_host_info)->build();
-
         parent::__construct();
-
     }
         
     protected function configure()
@@ -99,7 +95,6 @@ ELASTIC_HOST=esdata-0.local
 ELASTIC_PORT=9200
 ELASTIC_USER=elastic
 ELASTIC_PASSWORD=changeme
-
 {% endhighlight %} 
 </p>
 

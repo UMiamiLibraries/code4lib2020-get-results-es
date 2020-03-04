@@ -10,8 +10,6 @@
     
     <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
     <span class="p">{</span>
-        <span class="nv">$dotenv</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dotenv</span><span class="p">();</span>
-        <span class="nv">$dotenv</span><span class="o">-&gt;</span><span class="na">load</span><span class="p">(</span><span class="nx">__DIR__</span> <span class="o">.</span> <span class="s1">'/../../.env'</span><span class="p">);</span>
         <span class="nv">$elastic_host_info</span> <span class="o">=</span> <span class="p">[</span>
             <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">'ELASTIC_HOST'</span><span class="p">],</span>
             <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">'ELASTIC_PORT'</span><span class="p">],</span>
@@ -19,9 +17,7 @@
             <span class="nv">$_ENV</span><span class="p">[</span><span class="s1">'ELASTIC_PASSWORD'</span><span class="p">]</span>
         <span class="p">];</span>
         <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">elasticSearchClient</span> <span class="o">=</span> <span class="nx">ClientBuilder</span><span class="o">::</span><span class="na">create</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">setHosts</span><span class="p">(</span><span class="nv">$elastic_host_info</span><span class="p">)</span><span class="o">-&gt;</span><span class="na">build</span><span class="p">();</span>
-
         <span class="k">parent</span><span class="o">::</span><span class="na">__construct</span><span class="p">();</span>
-
     <span class="p">}</span>
         
     <span class="k">protected</span> <span class="k">function</span> <span class="nf">configure</span><span class="p">()</span>
