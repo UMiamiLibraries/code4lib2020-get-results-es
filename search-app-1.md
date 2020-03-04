@@ -188,16 +188,51 @@ $elasticSearchIngester->ingestData();
 
 ### Running the script to the ingest the collection's data into the Elasticsearch cluster
 
-<p>We have to run the script from within the search-app Docker container. We are going to ssh into the container. Before
-executing the following code from a console, please be sure that docker-compose is running.</p>
+<p>We have to run the script from within the search-app Docker container. We are going to execute an interactive bash shell inside the container. Before
+executing the following code from a console, please be sure that the containers are running.</p>
 
 <p>
 {% highlight Docker %}
-docker exec -it search-app /bin/bash
+docker exec -it search-app bash
 {% endhighlight %} 
 </p>
+
+<p>Your console should display something similar to this: </p>
+
+<p>
+{% highlight console %}
+root@19c1aaf68884:/home#
+{% endhighlight %} 
+</p>
+
+<p>Every command we run now is executed from within the container. Let's switch to the CustomScripts directory and
+ run the ingest.php script. Run the following two commands: </p>
+<hr>
+
+<p>
+{% highlight console %}
+$ cd site/wwwroot/src/CustomScripts/
+$ php ingest.php
+{% endhighlight %} 
+</p>
+
+<p>The output should look similar to this: </p>
+
+<p>
+{% highlight console %}
+Cannot load Zend OPcache - it was already loaded
+Ingesting data
+ 100/100 [============================] 100%
+Done ingesting data
+{% endhighlight %} 
+</p>
+
+<p>If you visit http://localhost:9200/_search/?pretty in your browser, you should get a response from Elasticsearch with 10 
+items from the index we just created.</p>
+
+<p>Now we have an Elasticsearch cluster with data. Time to begin query this data from our Symfony app</p>
 
 <hr>
 
 [Previous: The docker-compose file]({{ site.baseurl }}/docker-compose-file){: .btn .btn-outline }
-[Next: TBD]({{ site.baseurl }}/creating-dockerfile/){: .btn .btn-outline }
+[Next: The search app (part 2)]({{ site.baseurl }}/search-app-2/){: .btn .btn-outline }

@@ -47,10 +47,9 @@ $ git submodule update
 {% endhighlight %} 
 </p>
 
-<hr>
-
 In the next section we will start creating our Dockerfile.
 
+<hr>
 
 [Previous: Computer Setup]({{ site.baseurl }}/computer-setup){: .btn .btn-outline }
 [Next: Creating the Dockerfile]({{ site.baseurl }}/creating-dockerfile/){: .btn .btn-outline }
