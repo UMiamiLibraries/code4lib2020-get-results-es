@@ -44,7 +44,7 @@ function initNav() {
 
 function initSearch() {
   var request = new XMLHttpRequest();
-  request.open('GET', 'https://umiamilibraries.github.io/code4lib2020-get-results-es/assets/js/search-data.json', true);
+  request.open('GET', 'http://localhost:4000/code4lib2020-get-results-es/assets/js/search-data.json', true);
 
   request.onload = function(){
     if (request.status >= 200 && request.status < 400) {

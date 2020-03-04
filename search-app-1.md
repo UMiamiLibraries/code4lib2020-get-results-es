@@ -24,32 +24,30 @@ we can the collection in JSON format by appending ?fo=json to the URL of the col
 target="_blank">https://www.loc.gov/collections/national-screening-room/?fo=json</a> in your browser you will get the
  JSON of this collection.</p>
 
-### A custom script to ingest the collection's data into the Elasticsearch cluster
+### A custom command to ingest the collection's data into the Elasticsearch cluster
 
 <p>The search-app directory contains the Symfony app that will query our Elasticsearch cluster. But first, we need a way to ingest data
-from the Library of Congress' collection into our cluster. Let's create it!</p>
+from the Library of Congress' collection into our cluster.</p>
 
-<p>Navigate to /search-app/src/CustomScripts. This directory contains two files: ingest.php and ElasticsearchIngester.php. 
-The first one will be the entry point for our script. The later is a class that will contain all the logic required for the ingestion process</p>
+<p>Navigate to /search-app/src/Command. This directory contains a class named ElasticsearchIngesterCommand. 
+The class defines custom Symfony command that will ingest data into our Elasticsearch cluster. Let's give it a look.</p>
 
-<p>Let's check the ElasticsearchIngester class first.</p>
-
-<p>There is a couple of things happening in the class constructor: </p>
+<p>Our class extends the Command class of Symfony and overrides the configure() and execute() functions.</p>
 
 <p>
 {% highlight php %}
-# search-app/src/CustomScripts/ElasticsearchIngester.php
+# search-app/src/CustomScripts/ElasticsearchIngesterCommand.php
 ...
-class ElasticsearchIngester
+class ElasticsearchIngesterCommand extends Command
 {
-    private $apiUrl;
+    protected static $defaultName = 'app:ingest-data';
     private $elasticSearchClient;
+    private $outputInterface;
+    private $apiUrl;
     private $indexName;
     
-    public function __construct($apiUrl, $indexName)
+    public function __construct()
     {
-        $this->apiUrl = $apiUrl;
-        $this->indexName = $indexName;
         $elastic_host_info = [
             $_ENV['ELASTIC_HOST'],
             $_ENV['ELASTIC_PORT'],
@@ -57,15 +55,38 @@ class ElasticsearchIngester
             $_ENV['ELASTIC_PASSWORD']
         ];
         $this->elasticSearchClient = ClientBuilder::create()->setHosts($elastic_host_info)->build();
+        parent::__construct();
+    }
+        
+    protected function configure()
+    {
+        $this->setDescription('Ingests data from a LOC Collection API into an Elasticsearch cluster')
+            ->addArgument('apiUrl', InputArgument::REQUIRED, 'Pass API Url')
+            ->addArgument('indexName', InputArgument::REQUIRED, 'Pass the index name');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $this->outputInterface = $output;
+        $this->apiUrl = $input->getArgument('apiUrl');
+        $this->indexName = $input->getArgument('indexName');
+
+        $output->writeln('Checking if index exists...');
+        if (!$this->indexExists()) {
+            $output->writeln('Creating index ' . $this->indexName);
+            $this->createIndex();
+        }
+
+        $this->ingestData();
+        return 0;
     }
 ....
 }
 {% endhighlight %} 
 </p>
 
-<p>In the class constructor we are assigning values for the apiUrl and indexName variables. We are also building an 
-Elasticsearch client using the official PHP client for Elasticsearch. We are reading some of the Elasticsearch settings 
-from the .env file</p>
+<p>In the class constructor we are building an Elasticsearch client using the official PHP client for Elasticsearch. 
+The Elasticsearch settings are stored in the .env file</p>
 
 <p>
 {% highlight php %}
@@ -74,7 +95,6 @@ ELASTIC_HOST=esdata-0.local
 ELASTIC_PORT=9200
 ELASTIC_USER=elastic
 ELASTIC_PASSWORD=changeme
-
 {% endhighlight %} 
 </p>
 
@@ -119,10 +139,10 @@ the items in the collection and gets the id, title, location, online_format, url
 {% highlight php %}
 # search-app/src/CustomScripts/ElasticsearchIngester.php
 ...
-public function ingestData()
+private function ingestData()
 {
-    $progressBar = new ProgressBar(new ConsoleOutput(), 100);
-    echo 'Ingesting data' . PHP_EOL;
+    $this->outputInterface->writeln('Ingesting data');
+    $progressBar = new ProgressBar($this->outputInterface, 100);
     $currentApiUrl = $this->apiUrl;
     do {
         $data = $this->getJsonData($currentApiUrl);
@@ -136,7 +156,7 @@ public function ingestData()
         }
     } while (!empty($currentApiUrl));
     $progressBar->finish();
-    echo PHP_EOL . 'Done ingesting data' . PHP_EOL;
+    $this->outputInterface->writeln( PHP_EOL . 'Finished ingesting data');
 }
 
 private function prepareValues($results)
@@ -150,13 +170,13 @@ private function prepareValues($results)
             ]
         ];
         $params['body'][] = [
-            'title' => $result->title,
-            'online_format' => $result->online_format,
-            'location' => $result->location,
-            'url' => $result->url,
-            'notes' => $result->item->notes,
-            'image_url' => $result->image_url,
-            'description' => $result->description
+            'title' => isset($result->title) ? $result->title : '',
+            'online_format' => isset($result->online_format) ? $result->online_format : '',
+            'location' => isset($result->location) ? $result->location : '',
+            'url' => isset($result->url) ? $result->url : '',
+            'notes' => isset($result->item->notes) ? $result->item->notes : '',
+            'image_url' => isset($result->image_url) ? $result->image_url : '',
+            'description' => isset($result->description) ? $result->description : ''
         ];
     }
     return $params;
@@ -165,31 +185,12 @@ private function prepareValues($results)
 {% endhighlight %} 
 </p>
 
-<p>The ingest.php file creates an instance of our ElasticsearchIngester class. Then creates an index if it does not exist
-and after, it ingests the collection's data into the Elasticsearch cluster</p>
+<p>Now that we are familiar with the custom command to ingest the collection's data into the Elasticsearch cluster, let's run it!</p>
 
-<p>
-{% highlight php %}
-# search-app/src/CustomScripts/ingest.php
-...
-$apiUrl = 'https://www.loc.gov/collections/national-screening-room/?fo=json';
+### Running the command to ingest the collection's data into the Elasticsearch cluster
 
-$elasticSearchIngester = new ElasticsearchIngester($apiUrl, 'screening-room-index');
-
-if (!$elasticSearchIngester->indexExists()) {
-    $elasticSearchIngester->createIndex();
-}
-
-$elasticSearchIngester->ingestData();
-{% endhighlight %} 
-</p>
-
-<p>Now that we are familiar with the custom script to ingest the collection's data into the Elasticsearch cluster, let's run it!</p>
-
-### Running the script to the ingest the collection's data into the Elasticsearch cluster
-
-<p>We have to run the script from within the search-app Docker container. We are going to execute an interactive bash shell inside the container. Before
-executing the following code from a console, please be sure that the containers are running.</p>
+<p>We have to run the command from within the search-app Docker container. We can do this by executing an interactive 
+bash shell inside the container. Before executing the following code from a console, please be sure that the containers are running.</p>
 
 <p>
 {% highlight Docker %}
@@ -205,14 +206,14 @@ root@19c1aaf68884:/home#
 {% endhighlight %} 
 </p>
 
-<p>Every command we run now is executed from within the container. Let's switch to the CustomScripts directory and
- run the ingest.php script. Run the following two commands: </p>
+<p>Every command we run now is executed from within the container. Let's switch to the root directory of the Symfony app and
+ run the custom command. Run the following two commands: </p>
 <hr>
 
 <p>
 {% highlight console %}
-$ cd site/wwwroot/src/CustomScripts/
-$ php ingest.php
+$ cd site/wwwroot/
+$ php bin/console app:ingest-data 'https://www.loc.gov/collections/national-screening-room/?fo=json' 'screening-room-index'
 {% endhighlight %} 
 </p>
 
@@ -221,16 +222,17 @@ $ php ingest.php
 <p>
 {% highlight console %}
 Cannot load Zend OPcache - it was already loaded
+Checking if index exists...
 Ingesting data
  100/100 [============================] 100%
-Done ingesting data
+Finished ingesting data
 {% endhighlight %} 
 </p>
 
 <p>If you visit http://localhost:9200/_search/?pretty in your browser, you should get a response from Elasticsearch with 10 
 items from the index we just created.</p>
 
-<p>Now we have an Elasticsearch cluster with data. Time to begin query this data from our Symfony app</p>
+<p>Now we have an Elasticsearch cluster with data. Time to begin querying this data from our Symfony app</p>
 
 <hr>
 
