@@ -159,15 +159,23 @@ ENTRYPOINT ["/usr/local/bin/init.sh"]
 <p>
 {% highlight console %}
 
-$ docker build -f .docker/Dockerfile .
+$ docker build -f .docker/Dockerfile -t search-app:v1.0.0 .
 
 {% endhighlight %} 
 </p>
 
+<<<<<<< HEAD
 <p>The previous command tells Docker to build a container using the Dockerfile defined in the -f parameter. I
 f you don't specify a filepath, Docker will search for a Dockefile within the same directory the build command is executed from.
 The dot at the end of the command specifies the location where we want to build the container. In this case, we are building
 the container in the current directory</p>
+=======
+<p>The previous command tells Docker to build a container using the Dockerfile defined in the -f parameter. 
+If you don't specify a filepath, Docker will search for a Dockefile within the same directory the build command is executed from.
+We are also tagging the Docker container by using the -t parameter. The dot at the end of the command specified the 
+location where we want to build the container. In this case, we are building
+the container in the current directory.</p>
+>>>>>>> afc-dev
 
 <p>The output from the previous docker build command should look similar to this: </p>
 
