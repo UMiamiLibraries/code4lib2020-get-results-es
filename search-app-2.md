@@ -138,4 +138,4 @@ a search bar. Type a search term and hit Enter. Depending on the search term, yo
 <hr>
 
 [Previous: The search app (part 1)]({{ site.baseurl }}/search-app-1/){: .btn .btn-outline }
-[Next: TBD]({{ site.baseurl }}/search-app-2/){: .btn .btn-outline }
+[Next: Searching multiple indexes]({{ site.baseurl }}/searching-multiple-indexes/){: .btn .btn-outline }
