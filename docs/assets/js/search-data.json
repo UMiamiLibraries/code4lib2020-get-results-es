@@ -62,7 +62,7 @@
   }
   ,"10": {
     "title": "Useful links",
-    "content": "Useful links . Thank you for participating in this workshop. Below is a list of links to the documentation of the different technologies that were covered in the workshop. . Docker documentation | Docker Labs | Symfony documentation | Elasticsearch Reference | Elasticsearch DSL | Kibana documentation | . Have a great Code4Lib 2020! . . Previous: Dev Tools Console .",
+    "content": "Useful links . Thank you for participating in this workshop. Below is a list of links to the documentation of the different technologies that were covered in the workshop. . Docker documentation | Docker Labs | Symfony documentation | Elasticsearch Reference | Elasticsearch DSL | Elasticsearch Clients | Kibana documentation | . Have a great Code4Lib 2020! . . Previous: Dev Tools Console .",
     "url": "https://umiamilibraries.github.io/code4lib2020-get-results-es/useful-links/",
     "relUrl": "/useful-links/"
   }
