@@ -21,6 +21,19 @@ index() function which returns a twig template. We get this when visiting the fo
 <p>Let's modify the controller class so we can do a search. Replace the index() function with the following one. 
 Be sure to import all the required classes.</p>
 
+<p>Add this use statements at the beginning of the class:</p>
+
+<p>
+{% highlight php %}
+# search-app/src/Controller/SearchController.php
+
+use Elasticsearch\ClientBuilder;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+{% endhighlight %} 
+</p>
+
 <p>
 {% highlight php %}
 # search-app/src/Controller/SearchController.php
