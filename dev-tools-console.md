@@ -40,7 +40,7 @@ $ docker-compose up
 <p>When all of the services are running, open http://localhost:5601/ in your browser. You should see the Kibana homepage:</p>
 
 <figure>
-  <img src="{{ site.baseurl }}/assets/images/kibana-homepage.jpg" alt="Image displays the Kibana homepage">
+  <img src="{{ site.baseurl }}/assets/images/kibana-homepage.JPG" alt="Image displays the Kibana homepage">
 </figure>
 
 <p>Click the Console link under Manage and Administer the Elastic Stack</p>
