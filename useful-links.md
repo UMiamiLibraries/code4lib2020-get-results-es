@@ -18,6 +18,9 @@ that were covered in the workshop.</p>
     <li><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl.html" target="_blank">Elasticsearch DSL</a></li>
     <li><a href="https://www.elastic.co/guide/en/elasticsearch/client/index.html" target="_blank">Elasticsearch Clients</a></li>
     <li><a href="https://www.elastic.co/guide/en/kibana/current/index.html" target="_blank">Kibana documentation</a></li>
+    <li><a href="https://www.elastic.co/blog/getting-started-with-elasticsearch-security" target="_blank">Getting started with Elasticsearch security</a></li>
+    
+    
 </ul>
 
 <p>Have a great Code4Lib 2020!</p> 
