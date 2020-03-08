@@ -74,7 +74,7 @@ script that will make our development container wait for any other container it 
 {% highlight Docker %}
 #.docker/Dockerfile
 
-COPY ./wait-for-it/wait-for-it.sh /usr/local/wait-for-it.sh
+COPY ./.docker/wait-for-it/wait-for-it.sh /usr/local/wait-for-it.sh
 RUN chmod u+x /usr/local/wait-for-it.sh
 
 {% endhighlight %} 
